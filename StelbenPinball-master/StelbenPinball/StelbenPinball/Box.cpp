@@ -56,23 +56,23 @@ void Box::Draw()
 void bounceBall(Ball* b, Vector y, Vector x)
 {
 	//Get vector between two points of the side
-	Vector d = y - x;
+	Vector *d = new Vector(y - x);
 	//Gets normal of the side
-	Vector n1 = Vector(-d.Y, d.X);
+	Vector n1 = Vector(-( * d).Y, ( * d).X);
 	n1 = n1.UnitVector();
 	//Gets vector between Ball and one of the points
-	d = y - b->Center;
+	*d = y - b->Center;
 	//Shortest distance from ball to the side
-	float distanceToLine = d.DotProduct(n1);
+	float distanceToLine = (* d).DotProduct(n1);
 	//If the distance is greater than teh ball radius
 	if(distanceToLine > b->Radius || distanceToLine + b->Radius < b->Radius)
 	{
 		//Get Ball's next location
 		Vector nextLocation = b->Center + b->Speed;
 		//Distance from next location to the side
-		d = y - nextLocation;
+		*d = y - nextLocation;
 		//Shortest distance from Ball's next location to the side
-		float nextDistanceToLine = d.DotProduct(n1);
+		float nextDistanceToLine = ( * d).DotProduct(n1);
 		//Time when Ball will be next to the line
 		float time = (b->Radius - distanceToLine) / (nextDistanceToLine - distanceToLine);
 		//If the Ball will be next to the line within this update

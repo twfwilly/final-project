@@ -13,7 +13,7 @@ struct Color
 
 };
 Color fColor;
-int const KICK_BACK = 1000;
+int const KICK_BACK = 10;
 
 Flipper::Flipper(void)
 {
@@ -68,7 +68,7 @@ void Flipper::Update(bool isHeld, char flipper)
 	}
 	else 
 	{
-		if(angle > 0)
+		if(angle >= 5)
 		{
 			angle -=5;
 		}
@@ -86,7 +86,7 @@ void Flipper::Update(bool isHeld, char flipper)
 		}
 		else 
 		{
-			if(angle < 0)
+			if(angle <= -5)
 			{
 				angle += 5;
 			}
@@ -106,42 +106,42 @@ void Flipper::Update(bool isHeld, char flipper)
 //Bounce ball off flipper.  Check Box::BounceBall for how it works
 void Flipper::BounceBall(Ball* b , Vector leftP, Vector rightP, Vector topP, Vector botP, bool isHeld)
 {
-	Vector d = rightP - leftP;
-	Vector n1 = Vector(d.Y, -d.X);
-	n1 = n1.UnitVector();
-	d = leftP - b->Center;
-	float distanceToLine = d.DotProduct(n1);
-	Vector nextLocation = b->Center + b->Speed;
-	d = rightP - nextLocation;
-	float nextDistanceToLine = d.DotProduct(n1);
+	Vector *d = new Vector(rightP - leftP);
+	Vector *n1 = new Vector(d->Y, -d->X);
+	*n1 = (*n1).UnitVector();
+	*d = leftP - b->Center;
+	float distanceToLine = d->DotProduct(*n1);
+	Vector *nextLocation = new Vector(b->Center + b->Speed);
+	*d = rightP - *nextLocation;
+	float nextDistanceToLine = d->DotProduct(*n1);
 	float time = (b->Radius - distanceToLine) / (nextDistanceToLine - distanceToLine);
-	if(time > 0 && time <= 1)
+	if(time > 0 && time <= 3)
 	{
 
 
-		Vector moveToLine = b->Speed;
-		moveToLine.Multiply(time);
-		moveToLine = b->Center + moveToLine;
+		Vector *moveToLine = new Vector(b->Speed);
+		moveToLine->Multiply(time);
+		*moveToLine = b->Center + *moveToLine;
 		//Make sure ball is within line segment
-		if((moveToLine.X > leftP.X - b->Radius && moveToLine.X < rightP.X + b->Radius) || (moveToLine.X > rightP.X + b->Radius && moveToLine.X < leftP.X - b->Radius))
+		if((moveToLine->X > leftP.X - b->Radius && moveToLine->X < rightP.X + b->Radius) || (moveToLine->X > rightP.X + b->Radius && moveToLine->X < leftP.X - b->Radius))
 		{
-			if((moveToLine.Y > botP.Y - b->Radius && moveToLine.Y < topP.Y + b->Radius) || (moveToLine.Y > botP.Y - b->Radius && moveToLine.Y < topP.Y + b->Radius))
+			if((moveToLine->Y > botP.Y - b->Radius && moveToLine->Y < topP.Y + b->Radius) || (moveToLine->Y > botP.Y - b->Radius && moveToLine->Y < topP.Y + b->Radius))
 			{
 
-				b->Center = moveToLine;
-				n1 = n1.UnitVector();
-				n1 = n1.Project(b->Speed);
-				n1.Multiply(-1);
+				b->Center = *moveToLine;
+				*n1 = n1->UnitVector();
+				*n1 = n1->Project(b->Speed);
+				n1->Multiply(-1);
 
 				//While the flipper is moving it will give some kick to the ball
 				//Instead of calculating angular momentum and conserving momentum
 				//Looks good enough
 				if(isHeld)
 				{
-					n1.Multiply(1.1);
+					n1->Multiply(1.2);
 				}
 				
-				b->Speed = n1;
+				b->Speed = *n1;
 				b->score += 10;
 			}
 		}

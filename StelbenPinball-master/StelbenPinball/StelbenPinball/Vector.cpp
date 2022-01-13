@@ -20,7 +20,7 @@ Vector::Vector(float x, float y)
 }
 
 
-float Vector::GetMagnitude()
+ float Vector::GetMagnitude()
 {
 	return sqrt(pow(X,2) + pow(Y,2));
 }
@@ -62,31 +62,32 @@ float Vector::DotProduct(Vector v)
 //Projection of V onto this vector
 Vector Vector::Project(Vector v)
 {
-	Vector p(X,Y);
-	p.Divide(GetMagnitude());
-	p.Multiply(DotProduct(v) / GetMagnitude());
+	Vector* p=new Vector(X,Y);
+	p->Divide(GetMagnitude());
+	p->Multiply(DotProduct(v) / GetMagnitude());
 	
-	return p;
+	return *p;
 }
 
 //Return unit vector of this
 Vector Vector::UnitVector()
 {
-	Vector p(X,Y);
-	p.Divide(GetMagnitude());
-	return p;
+	Vector* p= new Vector(X,Y);
+	p->Divide(GetMagnitude());
+	return *p;
 }
 
 //Return sum of this and v
 Vector Vector::operator+(Vector v)
 {
-	return Vector(X + v.X, Y + v.Y);
+	
+	return *(new Vector(X + v.X, Y + v.Y) );
 }
 
 //Return subtraction of this and v
 Vector Vector::operator-(Vector v)
 {
-	return Vector(X - v.X, Y - v.Y);
+	return *(new Vector(X - v.X, Y - v.Y));
 }
 
 //Get distance between this and v

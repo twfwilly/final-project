@@ -273,7 +273,7 @@ int main(int argc, char** argv)
 	// 700 by 700 pixels for window
     glutInitWindowSize(700, 700); 
 
-	// offset by 50 pixels in x and y direction from origin
+	// offset by 50 pixels7 in x and y direction from origin
 	// of the screen - upper left corner
     glutInitWindowPosition(550, 50);
 
